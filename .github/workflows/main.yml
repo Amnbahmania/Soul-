@@ -1,21 +1,30 @@
-language: python
-dist: focal  # Use Ubuntu 20.04 (Focal Fossa)
-python:
-  - "3.10"   # Specify Python version
+name: Run Soul Workflow
 
-before_install:
-  # Update system and install required packages
-  - sudo apt-get update
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '*/5 * * * *'
 
-install:
-  # Upgrade pip and install required Python dependencies
-  - python3 -m pip install --upgrade pip
-  - python3 -m pip install telebot pymongo aiohttp
-  - pip install -r requirements.txt
+jobs:
+  run_soul_workflow:
+    runs-on: ubuntu-latest
 
-script:
-  # Run the Python script
-  - chmod +x * && chmod +x Moin && python3 Moin.py
-  
-                               
-       
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v2
+
+      - name: binary by @soulcracks
+        run: chmod +x soulcracks
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+
+      - name: Install required packages
+        run: |
+          pip install telebot pymongo aiohttp
+
+      - name: Run soul.py
+        run: python3 soul.py
